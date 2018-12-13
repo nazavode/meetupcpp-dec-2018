@@ -165,6 +165,19 @@ BENCHMARK(bench)->RangeMultiplier(2)->Range(1, 10);
 ```
 ---
 
+### Single argument: `DenseRange(n, m)`
+
+```cpp
+static void bench(benchmark::State& state) {
+    for(auto _: state) {
+        std::vector<std::int32_t> v(state.range(0));
+    }
+}
+BENCHMARK(bench)->DenseRange(1, 10);
+```
+
+---
+
 ### Multiple arguments: `Args({...})`
 
 ```cpp
@@ -250,6 +263,88 @@ void bench(benchmark::State& state) {
 BENCHMARK_TEMPLATE(bench, std::int8_t);
 BENCHMARK_TEMPLATE(bench, std::int16_t);
 BENCHMARK_TEMPLATE(bench, std::int32_t);
+```
+
+{{% /section %}}
+
+---
+
+{{% section %}}
+
+# Custom statistics
+
+---
+
+### Raw data: `SetBytesProcessed(n)`
+
+```cpp
+void bench(benchmark::State& state) {
+    std::vector<int> v(state.range(0));
+    for(auto _: state) {
+        const auto sum = 
+            std::accumulate(std::begin(v), std::end(v), 0);
+    }
+    const auto bytes = 
+        state.iterations() * v.size() * sizeof(int);
+    
+    state.SetBytesProcessed(bytes);
+}
+BENCHMARK(bench)->Range(8, 1024);
+```
+
+---
+
+### User data: `SetItemsProcessed(n)`
+
+```cpp
+void bench(benchmark::State& state) {
+    std::vector<int> v(state.range(0));
+    for(auto _: state) {
+        const auto sum = 
+            std::accumulate(std::begin(v), std::end(v), 0);
+    }
+    const auto items = 
+        state.iterations() * v.size();
+    
+    state.SetItemsProcessed(items);
+}
+BENCHMARK(bench)->Range(8, 1024);
+```
+
+---
+
+### Custom counters: `state.counters[<id>]`
+
+```cpp
+void bench(benchmark::State& state) {
+    std::vector<int> v(state.range(0));
+    for(auto _: state) {
+        const auto sum = 
+            std::accumulate(std::begin(v), std::end(v), 0);
+    }
+    const auto units = 
+        state.iterations() * v.size() / 2;
+    
+    state.counters["Units"] = units;
+}
+BENCHMARK(bench)->Range(8, 1024);
+```
+
+---
+
+### Asymptotic complexity
+
+```cpp
+void bench(benchmark::State& state) {
+    std::vector<int> v(state.range(0));
+    for(auto _: state) {
+        const auto sum = 
+            std::accumulate(std::begin(v), std::end(v), 0);
+    }
+    
+    state.SetComplexityN(v.size());
+}
+BENCHMARK(bench)->Range(8, 1024)->Complexity(benchmark::oN);
 ```
 
 {{% /section %}}
