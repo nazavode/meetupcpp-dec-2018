@@ -1,6 +1,6 @@
-[submodule "slides/themes/reveal-hugo"]
-	path = slides/themes/reveal-hugo
-	url = git@github.com:dzello/reveal-hugo.git
-[submodule "external/flamegraph"]
+[submodule "scripts/external/flamegraph"]
 	path = scripts/external/flamegraph
 	url = https://github.com/brendangregg/FlameGraph.git
+[submodule "slides/themes/reveal-hugo"]
+	path = slides/themes/reveal-hugo
+	url = https://github.com/dzello/reveal-hugo.git
