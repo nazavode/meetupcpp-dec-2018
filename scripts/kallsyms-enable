@@ -1,6 +1,0 @@
-#!/bin/bash
-
-set -eo pipefail
-
-echo 0 | sudo tee /proc/sys/kernel/kptr_restrict
-echo "Kernel symbols restrictions: $(cat /proc/sys/kernel/kptr_restrict)"
