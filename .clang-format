@@ -1,0 +1,8 @@
+---
+BasedOnStyle: Google
+ColumnLimit: 90
+IndentWidth: 4
+---
+Language: Cpp
+IncludeBlocks: Regroup
+...

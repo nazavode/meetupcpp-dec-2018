@@ -1,0 +1,5 @@
+---
+Checks: '-*,modernize-*,bugprone-*'
+HeaderFilterRegex: 'src/[^/]*\.(h|hpp|cpp)$'
+FormatStyle: file
+...
