@@ -39,7 +39,6 @@ static void bench_indexed(benchmark::State& state) {
         for (auto i : indices) {
             sum += v[i];
         }
-        benchmark::DoNotOptimize(sum);
     }
 
     // Measurements
