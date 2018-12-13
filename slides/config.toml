@@ -1,6 +1,5 @@
-baseURL = "http://example.org/"
+baseURL = "http://localhost"
 languageCode = "en-us"
-title = "My New Hugo Site"
 disableKinds = ["taxonomy", "taxonomyTerm"]
 
 theme = "reveal-hugo"
