@@ -1,0 +1,425 @@
+<!doctype html><html lang="en">
+  <head>
+	<meta name="generator" content="Hugo 0.52" />
+    <meta charset="utf-8">
+    <title>Understand performance with Google Benchmark</title>
+    
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="/reveal-js/css/reveal.css">
+    <link rel="stylesheet" href="/reveal-js/css/theme/white.css" id="theme"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/color-brewer.min.css">
+    
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? '\/reveal-js/css/print/pdf.css' : '\/reveal-js/css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+    
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+  
+<section>
+
+<h1 id="understanding-performance-with-google-benchmark">Understanding performance with Google Benchmark</h1>
+
+<p>Federico Ficarelli @ Meetup C++ 2018-12-13</p>
+
+</section><section>
+
+<h1 id="disclaimer-1">Disclaimer #1</h1>
+
+<p><img src="optimization.png" alt="Optimization" /></p>
+
+<p><a href="https://xkcd.com/1691/">xkcd.com/1691</a></p>
+
+</section><section>
+
+<h1 id="disclaimer-1-1">Disclaimer #1</h1>
+
+<ol>
+<li>Get your design right</li>
+<li>Use efficient algorithms, fast data structures and idioms</li>
+<li><strong>Measure</strong> and <strong>understand</strong> performance</li>
+<li><strong>Possibly consider</strong> fine grained optimization <strong>only when needed</strong></li>
+</ol>
+
+</section><section>
+
+<h1 id="disclaimer-2">Disclaimer #2</h1>
+
+<ol>
+<li><strong>Concepts</strong> are <strong>portable</strong>, their <strong>application</strong> is <strong>not</strong></li>
+<li>Some degree of <strong>knowledge</strong> of <strong>your architecture</strong> is required</li>
+<li>Profiling at low level can be <strong>frustrating</strong>, prepare yourself to some <strong>interpretation</strong> of data</li>
+</ol>
+
+</section><section>
+
+<h1 id="does-performance-matter-anymore">Does performance matter anymore?</h1>
+
+</section><section>
+
+<h1 id="measure-or-it-doesn-t-count">Measure or it doesn&rsquo;t count</h1>
+
+</section><section>
+
+<h2 id="measure-and-understand">Measure and understand</h2>
+
+<ol>
+<li>Profile your application as a whole</li>
+<li>Identify hotspots</li>
+<li>Understand what&rsquo;s going on in your hottest code</li>
+</ol>
+
+</section><section>
+
+<h1 id="macro-benchmarks">Macro benchmarks</h1>
+
+</section><section>
+
+<h2 id="macro-benchmarks-1">Macro benchmarks</h2>
+
+<ul>
+<li>Whole application</li>
+<li>Similar as much as possible to a production scenario</li>
+</ul>
+
+</section><section>
+
+<h1 id="micro-benchmarks">Micro benchmarks</h1>
+
+</section><section>
+
+<h2 id="micro-benchmarks-1">Micro benchmarks</h2>
+
+<p><img src="is_it_worth_the_time.png" alt="IsItWorth" /></p>
+
+<p><a href="https://xkcd.com/1205/">xkcd.com/1205</a></p>
+
+</section><section>
+
+<h2 id="micro-benchmarks-2">Micro benchmarks</h2>
+
+<ul>
+<li>The smallest possible hotspot</li>
+<li>As much isolation as you can get</li>
+<li>The goal is to <strong>analyze</strong>, <strong>understand</strong> and <strong>reproduce</strong></li>
+</ul>
+
+</section><section>
+
+<h1 id="google-benchmark">Google Benchmark</h1>
+
+</section><section>
+
+<h2 id="google-benchmark-getting-started">Google Benchmark: getting started</h2>
+
+<ol>
+<li>Define a free function accepting a <code>benchmark::State&amp;</code></li>
+<li>Measured code loops over <code>benchmark::State&amp;</code></li>
+<li>Register it with <code>BENCHMARK(...)</code> macro</li>
+<li>Add runner with <code>BENCHMARK_MAIN()</code> macro</li>
+</ol>
+
+</section><section>
+
+<section data-shortcode-section>
+<h2 id="google-benchmark-how-it-works">Google Benchmark: how it works</h2>
+
+<ol>
+<li>Warms up the caches</li>
+<li>Runs the benchmark</li>
+<li>Stops when the measurement is <em>statistically stable</em></li>
+</ol>
+
+</section><section>
+
+<h2 id="computer-latencies">Computer latencies</h2>
+
+<p><img src="latencies.png" height="550"></p>
+
+</section>
+
+</section><section>
+
+<section data-shortcode-section>
+<h1 id="parametric-benchmarks-values">Parametric benchmarks: values</h1>
+
+</section><section>
+
+<h3 id="single-argument-arg-n">Single argument: <code>Arg(n)</code></h3>
+
+<pre><code class="language-cpp">static void bench(benchmark::State&amp; state) {
+    for(auto _: state) {
+        std::vector&lt;std::int32_t&gt; v(state.range(0));
+    }
+}
+BENCHMARK(bench)
+    -&gt;Arg(1)
+    -&gt;Arg(2)
+    // ...
+    -&gt;Arg(10);
+</code></pre>
+
+</section><section>
+
+<h3 id="single-argument-range-n-m">Single argument: <code>Range(n, m)</code></h3>
+
+<pre><code class="language-cpp">static void bench(benchmark::State&amp; state) {
+    for(auto _: state) {
+        std::vector&lt;std::int32_t&gt; v(state.range(0));
+    }
+}
+BENCHMARK(bench)-&gt;Range(1, 10);
+</code></pre>
+
+</section><section>
+
+<h3 id="single-argument-rangemultiplier-n">Single argument: <code>RangeMultiplier(n)</code></h3>
+
+<pre><code class="language-cpp">static void bench(benchmark::State&amp; state) {
+    for(auto _: state) {
+        std::vector&lt;std::int32_t&gt; v(state.range(0));
+    }
+}
+BENCHMARK(bench)-&gt;RangeMultiplier(2)-&gt;Range(1, 10);
+</code></pre>
+
+</section><section>
+
+<h3 id="single-argument-denserange-n-m">Single argument: <code>DenseRange(n, m)</code></h3>
+
+<pre><code class="language-cpp">static void bench(benchmark::State&amp; state) {
+    for(auto _: state) {
+        std::vector&lt;std::int32_t&gt; v(state.range(0));
+    }
+}
+BENCHMARK(bench)-&gt;DenseRange(1, 10);
+</code></pre>
+
+</section><section>
+
+<h3 id="multiple-arguments-args">Multiple arguments: <code>Args({...})</code></h3>
+
+<pre><code class="language-cpp">static void bench(benchmark::State&amp; state) {
+    for(auto _: state) {
+        std::vector&lt;std::int32_t&gt; v(state.range(0),
+                                    state.range(1));
+    }
+}
+BENCHMARK(bench)-&gt;Args({1&lt;&lt;10, 128})-&gt;Args({2&lt;&lt;10, 256});
+</code></pre>
+
+</section><section>
+
+<h3 id="multiple-arguments-args-1">Multiple arguments: <code>Args({...})</code></h3>
+
+<pre><code class="language-cpp">static void bench(benchmark::State&amp; state) {
+    for(auto _: state) {
+        std::vector&lt;std::int32_t&gt; v(state.range(0),
+                                    state.range(1));
+    }
+}
+BENCHMARK(bench)
+    -&gt;Args({0, 0})-&gt;Args({0, 1}) ... -&gt;Args({0, 10})
+    -&gt;Args({1, 0})-&gt;Args({1, 1}) ... -&gt;Args({1, 10})
+    // ...
+    -&gt;Args({10, 0})-&gt;Args({10, 1}) ... -&gt;Args({10, 10});
+</code></pre>
+
+</section><section>
+
+<h3 id="multiple-arguments-ranges">Multiple arguments: <code>Ranges({...}, {...}, ...)</code></h3>
+
+<pre><code class="language-cpp">static void bench(benchmark::State&amp; state) {
+    for(auto _: state) {
+        std::vector&lt;std::int32_t&gt; v(state.range(0),
+                                    state.range(1));
+    }
+}
+BENCHMARK(bench)-&gt;Ranges({0, 10}, {0, 10});
+</code></pre>
+
+</section><section>
+
+<h3 id="custom-arguments-apply-callable">Custom arguments: <code>Apply(&lt;callable&gt;)</code></h3>
+
+<pre><code class="language-cpp">static void args(benchmark::internal::Benchmark* b) {
+    for(auto i = 0; i &lt;= 10; ++i)
+        for(auto j = 32; j &lt;= 1024 * 1024; j *= 8)
+            b-&gt;Args({i, j});
+}
+
+static void bench(benchmark::State&amp; state) {
+    for(auto _: state) {
+        std::vector&lt;std::int32_t&gt; v(state.range(0),
+                                    state.range(1));
+    }
+}
+BENCHMARK(bench)-&gt;Apply(args);
+</code></pre>
+
+</section>
+
+</section><section>
+
+<section data-shortcode-section>
+<h1 id="parametric-benchmarks-types">Parametric benchmarks: types</h1>
+
+</section><section>
+
+<h3 id="templated-benchmarks">Templated benchmarks</h3>
+
+<pre><code class="language-cpp">template &lt;typename T&gt;
+void bench(benchmark::State&amp; state) {
+    for(auto _: state) {
+        std::vector&lt;T&gt; v(256);
+    }
+}
+BENCHMARK_TEMPLATE(bench, std::int8_t);
+BENCHMARK_TEMPLATE(bench, std::int16_t);
+BENCHMARK_TEMPLATE(bench, std::int32_t);
+</code></pre>
+
+</section>
+
+</section><section>
+
+<section data-shortcode-section>
+<h1 id="custom-statistics">Custom statistics</h1>
+
+</section><section>
+
+<h3 id="raw-data-setbytesprocessed-n">Raw data: <code>SetBytesProcessed(n)</code></h3>
+
+<pre><code class="language-cpp">void bench(benchmark::State&amp; state) {
+    std::vector&lt;int&gt; v(state.range(0));
+    for(auto _: state) {
+        const auto sum = 
+            std::accumulate(std::begin(v), std::end(v), 0);
+    }
+    const auto bytes = 
+        state.iterations() * v.size() * sizeof(int);
+    
+    state.SetBytesProcessed(bytes);
+}
+BENCHMARK(bench)-&gt;Range(8, 1024);
+</code></pre>
+
+</section><section>
+
+<h3 id="user-data-setitemsprocessed-n">User data: <code>SetItemsProcessed(n)</code></h3>
+
+<pre><code class="language-cpp">void bench(benchmark::State&amp; state) {
+    std::vector&lt;int&gt; v(state.range(0));
+    for(auto _: state) {
+        const auto sum = 
+            std::accumulate(std::begin(v), std::end(v), 0);
+    }
+    const auto items = 
+        state.iterations() * v.size();
+    
+    state.SetItemsProcessed(items);
+}
+BENCHMARK(bench)-&gt;Range(8, 1024);
+</code></pre>
+
+</section><section>
+
+<h3 id="custom-counters-state-counters-id">Custom counters: <code>state.counters[&lt;id&gt;]</code></h3>
+
+<pre><code class="language-cpp">void bench(benchmark::State&amp; state) {
+    std::vector&lt;int&gt; v(state.range(0));
+    for(auto _: state) {
+        const auto sum = 
+            std::accumulate(std::begin(v), std::end(v), 0);
+    }
+    const auto units = 
+        state.iterations() * v.size() / 2;
+    
+    state.counters[&quot;Units&quot;] = units;
+}
+BENCHMARK(bench)-&gt;Range(8, 1024);
+</code></pre>
+
+</section><section>
+
+<h3 id="asymptotic-complexity">Asymptotic complexity</h3>
+
+<pre><code class="language-cpp">void bench(benchmark::State&amp; state) {
+    std::vector&lt;int&gt; v(state.range(0));
+    for(auto _: state) {
+        const auto sum = 
+            std::accumulate(std::begin(v), std::end(v), 0);
+    }
+    
+    state.SetComplexityN(v.size());
+}
+BENCHMARK(bench)-&gt;Range(8, 1024)-&gt;Complexity(benchmark::oN);
+</code></pre>
+
+</section>
+
+</section><section>
+
+<h1 id="thank-you">Thank you!</h1>
+
+<p><code>nazavode.github.io</code></p>
+
+<p><img src="nazavode.github.io.svg" alt="Link" /></p>
+</section>
+
+</div>
+      
+
+    </div>
+    <script type="application/json" id="reveal-hugo-site-params">null</script>
+    <script type="application/json" id="reveal-hugo-page-params">{"highlight_theme":"color-brewer","theme":"white","transition":"slide","transition_speed":"fast"}</script>
+    <script type="text/javascript"> window.revealHugoDependencies = { dependencies: [ { src: '\/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: '\/reveal-js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: '\/reveal-js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: '\/reveal-js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: '\/reveal-js/plugin/zoom-js/zoom.js', async: true },
+          
+          { src: '\/nazavode.github.io\/meetupcpp-dec-2018\/reveal-js\/plugin\/notes\/notes.js', async: true }
+      ]};
+    </script>
+    <script src="/reveal-js/lib/js/head.min.js"></script>
+    <script src="/reveal-js/js/reveal.js"></script>
+    <script type="text/javascript">
+      
+      
+      function camelize(map) {
+        if (map) {
+          Object.keys(map).forEach(function(k) {
+            newK = k.replace(/(\_\w)/g, function(m) { return m[1].toUpperCase() });
+            if (newK != k) {
+              map[newK] = map[k];
+              delete map[k];
+            }
+          });
+        }
+        return map;
+      }
+      
+      var revealHugoDefaults = { center: true, controls: true, history: true, progress: true, transition: "slide" };
+      var revealHugoSiteParams = JSON.parse(document.getElementById('reveal-hugo-site-params').innerHTML);
+      var revealHugoPageParams = JSON.parse(document.getElementById('reveal-hugo-page-params').innerHTML);
+      
+      var options = Object.assign({},
+        camelize(revealHugoDefaults),
+        camelize(revealHugoSiteParams),
+        camelize(revealHugoPageParams),
+        revealHugoDependencies);
+      Reveal.initialize(options);
+    </script>
+    
+    
+  </body>
+</html>
