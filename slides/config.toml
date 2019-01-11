@@ -1,4 +1,7 @@
 baseURL = "http://localhost"
+# When generating for deployment, be sure to set:
+# baseURL = "https://nazavode.github.io/meetupcpp-dec-2018/"
+
 languageCode = "en-us"
 disableKinds = ["taxonomy", "taxonomyTerm"]
 

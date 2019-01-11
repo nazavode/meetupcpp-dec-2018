@@ -8,7 +8,7 @@ Please note that some submodules are needed to have all the stuff working proper
 
 | Path        | What to expect                                                                                                                 |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `slides/`   | The [hugo](https://gohugo.io/) site that generates the full slide deck. Just `cd` into it and launch `hugo server`. |
+| `slides/`   | The [hugo](https://gohugo.io/) site that generates the full slide deck (published [here](https://nazavode.github.io/meetupcpp-dec-2018/)). Just `cd` into it and launch `hugo server`.|
 | `examples/` | Show me the code. |
 | `scripts/`  | Helper scripts to carry out some tedious stuff during the live coding. Not interesting unless you are *very* lazy (like me). |
 
