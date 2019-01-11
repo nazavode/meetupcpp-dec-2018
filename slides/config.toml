@@ -9,3 +9,5 @@ baseName = "index"
 mediaType = "text/html"
 isHTML = true
 
+[params.reveal_hugo]
+reveal_cdn = "https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0"
