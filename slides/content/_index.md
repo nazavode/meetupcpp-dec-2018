@@ -148,7 +148,7 @@ static void bench(benchmark::State& state) {
         std::vector<std::int32_t> v(state.range(0));
     }
 }
-BENCHMARK(bench)->Range(1, 10);
+BENCHMARK(bench)->Range(2, 10);
 ```
 
 ---
@@ -161,7 +161,7 @@ static void bench(benchmark::State& state) {
         std::vector<std::int32_t> v(state.range(0));
     }
 }
-BENCHMARK(bench)->RangeMultiplier(2)->Range(1, 10);
+BENCHMARK(bench)->RangeMultiplier(3)->Range(2, 10);
 ```
 ---
 
@@ -173,7 +173,7 @@ static void bench(benchmark::State& state) {
         std::vector<std::int32_t> v(state.range(0));
     }
 }
-BENCHMARK(bench)->DenseRange(1, 10);
+BENCHMARK(bench)->DenseRange(2, 10);
 ```
 
 ---
