@@ -1,6 +1,6 @@
 <!doctype html><html lang="en">
   <head>
-	<meta name="generator" content="Hugo 0.52" />
+	<meta name="generator" content="Hugo 0.53" />
     <meta charset="utf-8">
     <title>Understand performance with Google Benchmark</title>
     
@@ -8,14 +8,14 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="/reveal-js/css/reveal.css">
-    <link rel="stylesheet" href="/reveal-js/css/theme/white.css" id="theme"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/color-brewer.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/css/reveal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/css/theme/white.css" id="theme"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/color-brewer.min.css">
     
     <script>
       var link = document.createElement( 'link' );
       link.rel = 'stylesheet';
       link.type = 'text/css';
-      link.href = window.location.search.match( /print-pdf/gi ) ? '\/reveal-js/css/print/pdf.css' : '\/reveal-js/css/print/paper.css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/reveal.js\/3.7.0/css/print/pdf.css' : 'https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/reveal.js\/3.7.0/css/print/paper.css';
       document.getElementsByTagName( 'head' )[0].appendChild( link );
     </script>
     
@@ -176,7 +176,7 @@ BENCHMARK(bench)
         std::vector&lt;std::int32_t&gt; v(state.range(0));
     }
 }
-BENCHMARK(bench)-&gt;Range(1, 10);
+BENCHMARK(bench)-&gt;Range(2, 10);
 </code></pre>
 
 </section><section>
@@ -188,7 +188,7 @@ BENCHMARK(bench)-&gt;Range(1, 10);
         std::vector&lt;std::int32_t&gt; v(state.range(0));
     }
 }
-BENCHMARK(bench)-&gt;RangeMultiplier(2)-&gt;Range(1, 10);
+BENCHMARK(bench)-&gt;RangeMultiplier(3)-&gt;Range(2, 10);
 </code></pre>
 
 </section><section>
@@ -200,7 +200,7 @@ BENCHMARK(bench)-&gt;RangeMultiplier(2)-&gt;Range(1, 10);
         std::vector&lt;std::int32_t&gt; v(state.range(0));
     }
 }
-BENCHMARK(bench)-&gt;DenseRange(1, 10);
+BENCHMARK(bench)-&gt;DenseRange(2, 10);
 </code></pre>
 
 </section><section>
@@ -370,7 +370,7 @@ BENCHMARK(bench)-&gt;Range(8, 1024)-&gt;Complexity(benchmark::oN);
 
 <h1 id="thank-you">Thank you!</h1>
 
-<p><code>nazavode.github.io</code></p>
+<p><a href="https://nazavode.github.io">nazavode.github.io</a></p>
 
 <p><img src="nazavode.github.io.svg" alt="Link" /></p>
 </section>
@@ -379,19 +379,19 @@ BENCHMARK(bench)-&gt;Range(8, 1024)-&gt;Complexity(benchmark::oN);
       
 
     </div>
-    <script type="application/json" id="reveal-hugo-site-params">null</script>
+    <script type="application/json" id="reveal-hugo-site-params">{"reveal_cdn":"https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0"}</script>
     <script type="application/json" id="reveal-hugo-page-params">{"highlight_theme":"color-brewer","theme":"white","transition":"slide","transition_speed":"fast"}</script>
-    <script type="text/javascript"> window.revealHugoDependencies = { dependencies: [ { src: '\/reveal-js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
-          { src: '\/reveal-js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-          { src: '\/reveal-js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-          { src: '\/reveal-js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-          { src: '\/reveal-js/plugin/zoom-js/zoom.js', async: true },
+    <script type="text/javascript"> window.revealHugoDependencies = { dependencies: [ { src: 'https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/reveal.js\/3.7.0/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/reveal.js\/3.7.0/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/reveal.js\/3.7.0/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/reveal.js\/3.7.0/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: 'https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/reveal.js\/3.7.0/plugin/zoom-js/zoom.js', async: true },
           
-          { src: '\/nazavode.github.io\/meetupcpp-dec-2018\/reveal-js\/plugin\/notes\/notes.js', async: true }
+          { src: '\/meetupcpp-dec-2018\/reveal-js\/plugin\/notes\/notes.js', async: true }
       ]};
     </script>
-    <script src="/reveal-js/lib/js/head.min.js"></script>
-    <script src="/reveal-js/js/reveal.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/lib/js/head.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.7.0/js/reveal.js"></script>
     <script type="text/javascript">
       
       
